@@ -1,5 +1,10 @@
 paths=()
 statuses=()
+
+# TODO: Move to args
+full_paths=false
+path_length=30
+
 for d in */ ; do
     cd $d;
     if [[ ! -d .git/ ]]
@@ -7,19 +12,32 @@ for d in */ ; do
       cd ..
       continue
     fi
-    paths+=("$(pwd)")
+
+    if $full_paths ; then
+      # save full paths
+      paths+=( "$(pwd)" )
+    else
+      # save dir names only
+      paths+=("${PWD##*/}")
+    fi
+
     statuses+=("$(git branch --show-current)")
     cd ../
 done;
-# echo "${statuses[*]}"
-# echo "${paths[*]}"
+
+# Colors
+green='\e[32m'
+blue='\e[34m'
+normal='\e[0m'
 
 len=${#paths[@]}
 for (( i=0; i<$len; i++ )); do
-  echo "$(echo "...${paths[$i]}" | tail -c 30) ${statuses[$i]}"
+  branch=${statuses[$i]}
+  if [ $branch == "master" ]; then
+    branch_string="$green$branch"
+  else
+    branch_string="$blue$branch"
+  fi
+
+  printf "${normal} $(printf "%30s %s" ${paths[$i]}) $branch_string\n"
 done
-
-
-## Use bash for loop
-# for (( i=0; i<$len; i++ )); do echo "${paths[$i]}" ; done
-# echo $len
