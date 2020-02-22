@@ -21,7 +21,7 @@ for d in */ ; do
       paths+=("${PWD##*/}")
     fi
 
-    statuses+=("$(git branch --show-current)")
+    statuses+=("$(git rev-parse --abbrev-ref HEAD)")
     cd ../
 done;
 
