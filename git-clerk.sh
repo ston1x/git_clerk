@@ -7,8 +7,7 @@ full_paths=false
 path_length=30
 
 # Display help
-help()
-{
+function help {
    echo "git-clerk $VERSION"
    echo
    echo "Syntax: git-clerk [-l|f|h|v]"
@@ -20,11 +19,11 @@ help()
    echo "-v    Version info"
 }
 
-version_info()
-{
+function version_info {
   echo "git-clerk v$VERSION"
 }
 
+# Check command arguments
 while getopts ":l :f :h :v" option; do
    case $option in
       l) # display a
