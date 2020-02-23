@@ -26,8 +26,8 @@ function version_info {
 # Check command arguments
 while getopts ":l :f :h :v" option; do
    case $option in
-      l) # display a
-        echo "AAA"
+      l) # Specify path length
+        echo "NOT IMPLEMENTED YET"
         exit;;
       f) # print full paths
         full_paths=true
