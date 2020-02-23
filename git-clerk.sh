@@ -1,9 +1,50 @@
+VERSION=0.2.2.8
 paths=()
 statuses=()
 
 # TODO: Move to args
 full_paths=false
 path_length=30
+
+# Display help
+help()
+{
+   echo "git-clerk $VERSION"
+   echo
+   echo "Syntax: git-clerk [-l|f|h|v]"
+   echo
+   echo "Options:"
+   echo "-l    Specify path length"
+   echo "-f    Print full paths"
+   echo "-h    Help"
+   echo "-v    Version info"
+}
+
+version_info()
+{
+  echo "git-clerk v$VERSION"
+}
+
+while getopts ":l :f :h :v" option; do
+   case $option in
+      l) # display a
+        echo "AAA"
+        exit;;
+      f) # print full paths
+        full_paths=true
+        continue;;
+      h) # display help
+        help
+         exit;;
+      v) # display version info
+        version_info
+        exit;;
+     \?) # incorrect argument
+         echo "Error: Invalid argument(s)"
+         echo "Run 'git-clerk -h' for help"
+         exit;;
+   esac
+done
 
 for d in */ ; do
     cd $d;
