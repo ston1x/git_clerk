@@ -13,8 +13,8 @@ function help {
    echo "Syntax: git-clerk [-l|f|h|v]"
    echo
    echo "Options:"
-   echo "-l    Specify path length"
-   echo "-f    Print full paths"
+   echo "-l    Specify path length (default=30)"
+   echo "-f    Print full paths (default=false)"
    echo "-h    Help"
    echo "-v    Version info"
 }
@@ -24,25 +24,26 @@ function version_info {
 }
 
 # Check command arguments
-while getopts ":l :f :h :v" option; do
-   case $option in
-      l) # Specify path length
-        echo "NOT IMPLEMENTED YET"
-        exit;;
-      f) # print full paths
-        full_paths=true
-        continue;;
-      h) # display help
-        help
-         exit;;
-      v) # display version info
-        version_info
-        exit;;
-     \?) # incorrect argument
-         echo "Error: Invalid argument(s)"
-         echo "Run 'git-clerk -h' for help"
-         exit;;
-   esac
+while getopts ":l:fhv" option
+do
+  case $option in
+    l) # Specify path length
+      path_length=${OPTARG}
+      ;;
+    f) # print full paths
+      full_paths=true
+      ;;
+    h) # display help
+      help
+       exit;;
+    v) # display version info
+      version_info
+      exit;;
+   \?) # incorrect argument
+       echo "Error: Invalid argument(s)"
+       echo "Run 'git-clerk -h' for help"
+       exit;;
+  esac
 done
 
 for d in */ ; do
@@ -79,5 +80,5 @@ for (( i=0; i<$len; i++ )); do
     branch_string="$blue$branch"
   fi
 
-  printf "${normal} $(printf "%30s %s" ${paths[$i]}) $branch_string\n"
+  printf "${normal} $(printf "%${path_length}s %s" ${paths[$i]}) $branch_string\n"
 done
