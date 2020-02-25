@@ -1,6 +1,9 @@
+#!/bin/bash
+
 # Constant values
 readonly VERSION=0.2.2.8
 readonly normal='\e[0m'
+readonly red='\e[31m'
 readonly green='\e[32m'
 readonly blue='\e[34m'
 
@@ -76,7 +79,7 @@ for d in */ ; do
   # Save branch name(and status)
   branch=$(git rev-parse --abbrev-ref HEAD)
   if $show_dirty ; then
-    dirty=$(git diff --quiet --ignore-submodules HEAD &>/dev/null; [ $? -eq 1 ] && echo "*")
+    dirty=$(git diff --quiet --ignore-submodules HEAD &>/dev/null; [ $? -eq 1 ] && echo "${red}*")
     branch="$branch $dirty"
   fi
   statuses+=("$branch")
