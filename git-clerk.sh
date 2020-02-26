@@ -1,18 +1,20 @@
 #!/bin/bash
 
 # Constant values
-readonly VERSION=0.2.2.8
+readonly VERSION=0.30
 readonly normal='\e[0m'
 readonly red='\e[31m'
 readonly green='\e[32m'
 readonly blue='\e[34m'
 
-# Default variable values
+# Default variable values (can be changed in args)
 full_paths=false
+show_dirty=false
 path_length=30
+
+# Init empty arrays
 paths=()
 statuses=()
-show_dirty=false
 
 # Display help
 function help {
@@ -40,15 +42,15 @@ do
     d) # Show asterisk if dirty
       show_dirty=true
       ;;
-    l) # Specify path length
-      path_length=${OPTARG}
-      ;;
     f) # Print full paths
       full_paths=true
       ;;
     h) # Display help
       help
        exit;;
+    l) # Specify path length
+      path_length=${OPTARG}
+      ;;
     v) # Display version info
       version_info
       exit;;
@@ -69,14 +71,14 @@ for d in */ ; do
   fi
 
   if $full_paths ; then
-    # save full paths
+    # append full paths
     paths+=( "$(pwd)" )
   else
-    # save dir names only
+    # append dir names only
     paths+=("${PWD##*/}")
   fi
 
-  # Save branch name(and status)
+  # Save branch name (and dirtiness status if -d was passed)
   branch=$(git rev-parse --abbrev-ref HEAD)
   if $show_dirty ; then
     dirty=$(git diff --quiet --ignore-submodules HEAD &>/dev/null; [ $? -eq 1 ] && echo "${red}*")
@@ -89,10 +91,11 @@ done;
 len=${#paths[@]}
 for (( i=0; i<$len; i++ )); do
   branch=${statuses[$i]}
-  # if [ $branch == "master" ]; then
   if [[ $branch == *"master"* ]]; then
+    # mark `master` as green
     branch_string="$green$branch"
   else
+    # mark not `master` as blue
     branch_string="$blue$branch"
   fi
 
