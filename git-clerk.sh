@@ -18,7 +18,7 @@ statuses=()
 
 # Display help
 function help {
-  echo "git-clerk $VERSION"
+  version_info
   echo
   echo "Syntax: git-clerk [-d|f|h|v -l <length in symbols>]"
   echo
@@ -61,6 +61,8 @@ do
   esac
 done
 
+echo
+echo
 # Start clerking
 for d in */ ; do
   cd $d;
