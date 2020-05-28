@@ -11,6 +11,6 @@ $ `git clone https://github.com/ston1x/git-clerk.git`
 ## Usage
 $ `~/YOUR_GIT_CLERK_LOCATION/git-clerk.sh [-d|f|l <path length>]`
 
-![](demo.gif)
+[![asciicast](https://asciinema.org/a/i05EkgWPN3Nk9aSCVEjzgAuAj.svg)](https://asciinema.org/a/i05EkgWPN3Nk9aSCVEjzgAuAj)
 
 See `-h` for help
