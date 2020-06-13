@@ -1,7 +1,12 @@
+require 'open3'
+
 module GitClerk
   module Gitable
     def branch
-      `git rev-parse --abbrev-ref HEAD`.chomp
+      # NOTE: The Open3 approach is less performant,
+      # although it captures the errors and doesn't print them directly.
+      stdout, _stderr, _status = Open3.capture3('git rev-parse --abbrev-ref HEAD')
+      stdout.chomp
     end
 
     def dirty?
