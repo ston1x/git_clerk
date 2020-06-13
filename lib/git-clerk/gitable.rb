@@ -5,6 +5,8 @@ module GitClerk
     end
 
     def dirty?
+      return nil unless @show_dirty
+
       dirty = dirty_files
       (dirty[:untracked] + dirty[:uncommited]).positive? ? dirty : false
     end
