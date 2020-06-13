@@ -1,4 +1,5 @@
 require_relative 'gitable'
+require 'colorize'
 
 module GitClerk
   class DirProcessor
@@ -11,13 +12,14 @@ module GitClerk
       @data        = []
 
       # ARGS
-      @path_type = :full
+      # TODO: these should be taken from the argvs
+      @path_type  = :full
+      @show_dirty = true
     end
 
     def clerk
       collect_dirs
       clerk_through_dirs
-      pr_print
     end
 
     private
@@ -63,28 +65,6 @@ module GitClerk
     def enrich_with_additional_data(entry)
       # nothing to add for now
       entry
-    end
-
-    def pr_print
-      return puts 'No git directories here!' if data.empty?
-
-      pretty_strings = [].tap do |strings|
-        data.each do |entry|
-          strings << "#{entry[:dir].ljust(find_longest(:dir))} | #{entry[:branch]} #{'*' if entry[:dirty]}"
-        end
-      end
-
-      pretty_strings.each { |str| puts str }
-    end
-
-    def find_longest(key)
-      keys = data.map { |e| e[key] }
-      keys.max_by(&:length).length
-    end
-
-    def print_results
-      data_to_print = data.empty? ? 'No git directories here!' : data
-      puts data_to_print
     end
   end
 end
