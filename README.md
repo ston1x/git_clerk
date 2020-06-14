@@ -1,4 +1,4 @@
-# 👨🏽‍💼 git-clerk
+# 👨🏽‍💼 git_clerk
 Your simple bash buddy that keeps a look at all your local repos
 
 ## Why use it?
