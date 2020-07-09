@@ -1,6 +1,8 @@
 require 'git_clerk/dir_processor'
 require 'git_clerk/visualizer'
 require 'git_clerk/opt_parser'
+require 'git_clerk/errors/main_command_not_specified_error'
+require 'git_clerk/errors/global_options_not_compatible'
 
 module GitClerk
   include Gitable
@@ -12,10 +14,18 @@ module GitClerk
   }.freeze
 
   def self.clerk_and_print
-    options = OptParser.parse
-    processor = DirProcessor.new(Dir.pwd)
-    processor.clerk
-    visualize(processor.data)
+    parser = OptParser.new
+    parser.parse!
+    options = parser.result
+    pp options
+  rescue StandardError => e
+    puts e.message
+
+    # ---- TODO: decomment it back after pry tests on options!!!
+    # processor = DirProcessor.new(Dir.pwd)
+    # processor.clerk
+    # visualize(processor.data)
+    # ---- ENDS HERE ----
 
     # result = clerk(options)
     # visualize(result.data)

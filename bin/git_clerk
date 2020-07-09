@@ -2,6 +2,5 @@
 require 'git_clerk'
 
 begin
-  puts "HELLO"
   GitClerk.clerk_and_print
 end
