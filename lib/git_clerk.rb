@@ -6,7 +6,6 @@ require 'git_clerk/errors/main_command_not_specified_error'
 require 'git_clerk/errors/options_not_compatible_error'
 require 'git_clerk/errors/option_instead_of_argument_error'
 require 'git_clerk/errors/command_not_implemented_error'
-require 'pry'
 
 module GitClerk
   include Gitable
