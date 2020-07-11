@@ -4,16 +4,26 @@ require 'git_clerk/version'
 module GitClerk
   class OptParser
     MAIN_COMMANDS  = %w[clerk help version].freeze
-    FLAGS          = %w[-f -d].freeze
+    FLAGS          = %w[-f -d -v].freeze
     ALLOWED_ARGS   = (MAIN_COMMANDS + FLAGS).uniq.freeze
     COMPATIBLE_OPTIONS = {
       'clerk' => {
         '-p' => 'Path argument (used as -p YOUR_PATH)',
         '-f' => 'Show full paths',
-        '-d' => 'Show dirtiness status (*)'
+        '-d' => 'Show dirtiness status (*)',
+        '-v' => 'Verbose'
       },
       'help' => {},
       'version' => {}
+    }.freeze
+
+    # If a flag was passed, map to its name and value
+    PARSED_FLAGS = {
+      'clerk' => {
+        '-f' => { full_paths: true },
+        '-d' => { show_dirty: true },
+        '-v' => { verbose: true }
+      }
     }.freeze
 
     # Options which need arguments (like -p PATH)
@@ -65,7 +75,8 @@ module GitClerk
         )
       end
 
-      @flags = @args.select { |opt| FLAGS.include? opt }
+      flag_args = @args.select { |opt| FLAGS.include? opt }
+      @flags = flag_args.map { |f| PARSED_FLAGS[main_command][f] }.reduce({}, :merge!)
     end
 
     def detect_key_value_options!

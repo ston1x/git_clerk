@@ -2,5 +2,5 @@
 require 'git_clerk'
 
 begin
-  GitClerk.clerk_and_print
+  GitClerk.run
 end
