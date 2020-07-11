@@ -11,7 +11,7 @@ module GitClerk
 
       pretty_strings = [].tap do |strings|
         data.each do |entry|
-          strings << "#{entry[:dir].ljust(find_longest_string(:dir))} | #{entry[:branch]} #{'*'.colorize(:blue) if entry[:dirty]}"
+          strings << "#{path(entry[:path])} | #{colored_branch(entry[:branch])} #{dirtiness_status(entry[:dirty])}"
         end
       end
 
@@ -20,6 +20,18 @@ module GitClerk
     end
 
     private
+
+    def path(path)
+      path.ljust(find_longest_string(:path))
+    end
+
+    def colored_branch(branch)
+      branch == 'master' ? branch.colorize(:green) : branch.colorize(:yellow)
+    end
+
+    def dirtiness_status(dirty)
+      '*'.colorize(:blue) if dirty
+    end
 
     def find_longest_string(key)
       keys = data.map { |e| e[key] }

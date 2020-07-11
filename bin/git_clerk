@@ -1,0 +1,6 @@
+#!/usr/bin/env ruby
+require 'git_clerk'
+
+begin
+  GitClerk.run
+end

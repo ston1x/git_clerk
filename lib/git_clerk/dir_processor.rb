@@ -5,24 +5,25 @@ module GitClerk
   class DirProcessor
     include GitClerk::Gitable
 
-    attr_reader :all_dirs, :data, :current_dir, :path_type
-    def initialize(dir)
-      @current_dir = dir
+    attr_reader :all_dirs, :data, :current_dir, :full_paths
+    def initialize(key_value_options, flags)
+      @current_dir = key_value_options['-p'] || Dir.pwd
       @all_dirs    = []
       @data        = []
-
-      # ARGS
-      # TODO: these should be taken from the argvs
-      @path_type  = :full
-      @show_dirty = true
+      parse_flags(flags)
     end
 
-    def clerk
+    def clerk!
       collect_dirs
       clerk_through_dirs
     end
 
     private
+
+    def parse_flags(flags)
+      @full_paths = flags[:full_paths] || false
+      @show_dirty = flags[:show_dirty] || false
+    end
 
     def collect_dirs
       Dir.chdir(current_dir) do
@@ -38,8 +39,7 @@ module GitClerk
           next unless contains_git
 
           entry = {
-            dir: dir,
-            full_path: current_dir_name(path: path_type),
+            path: current_dir_name(full_paths: full_paths),
             branch: branch,
             dirty: dirty?
           }
@@ -54,16 +54,16 @@ module GitClerk
     end
 
     # full or short
-    def current_dir_name(path:)
-      path == :full ? Dir.pwd : short_dir_name
+    def current_dir_name(full_paths:)
+      full_paths ? Dir.pwd : short_dir_name
     end
 
     def short_dir_name
       Dir.pwd.split('/').last
     end
 
+    # Nothing to add for now
     def enrich_with_additional_data(entry)
-      # nothing to add for now
       entry
     end
   end

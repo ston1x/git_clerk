@@ -1,23 +1,16 @@
 # 👨🏽‍💼 git_clerk
-Your simple bash buddy that keeps a look at all your local repos
+Your simple CLI buddy that keeps a look at all your local repos
 
 ## Why use it?
 git_clerk helps you when you have a bunch of git repos inside of a folder (say, your personal projects, or many microservices). You can easily check the state of each one.
 
+## Building
+`gem build git_clerk.gemspec`
+
 ## Installation
-```
-curl -o- https://raw.githubusercontent.com/ston1x/git-clerk/master/install.sh | bash
-```
-or
-```
-wget -qO- https://raw.githubusercontent.com/ston1x/git-clerk/master/install.sh | bash
-```
-
-
+`gem install ./git_clerk-0.1.3.gem`
 
 ## Usage
-$ git-clerk [-d|f|l <path length>]`
-
-[![asciicast](https://asciinema.org/a/i05EkgWPN3Nk9aSCVEjzgAuAj.svg)](https://asciinema.org/a/i05EkgWPN3Nk9aSCVEjzgAuAj)
-
-See `-h` for help
+`git_clerk clerk`
+`git_clerk clerk -p PATH -d -f`
+`git_clerk help`
