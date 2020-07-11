@@ -16,22 +16,17 @@ module GitClerk
     parser.parse!
     options = parser.result
     CommandRunner.new(options).run
-  rescue StandardError => e
+  rescue StandardError, NotImplementedError => e
     puts e.class, e.message
-    puts e.backtrace if options[:flags][:verbose]
-
-    # ---- TODO: decomment it back after pry tests on options!!!
-    # processor = DirProcessor.new(Dir.pwd)
-    # processor.clerk
-    # visualize(processor.data)
-    # ---- ENDS HERE ----
-
-    # result = clerk(options)
-    # visualize(result.data)
+    puts e.backtrace if verbose?
   end
 
   # TODO: optimize this method for non-CLI usage
   def self.clerk
     raise NotImplementedError
+  end
+
+  def self.verbose?
+    ARGV.include? OptParser::VERBOSE_FLAG
   end
 end
