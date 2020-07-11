@@ -19,7 +19,8 @@ module GitClerk
     end
 
     def help
-      puts 'not implemented!'
+      version
+      pp OptParser::COMPATIBLE_OPTIONS
     end
 
     def version

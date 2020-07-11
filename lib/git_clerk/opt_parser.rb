@@ -4,14 +4,16 @@ require 'git_clerk/version'
 module GitClerk
   class OptParser
     MAIN_COMMANDS  = %w[clerk help version].freeze
-    FLAGS          = %w[-f -d -v].freeze
+    VERBOSE_FLAG   = '-v'.freeze
+    GLOBAL_FLAGS   = [VERBOSE_FLAG].freeze
+    FLAGS          = %w[-f -d] + GLOBAL_FLAGS.freeze
     ALLOWED_ARGS   = (MAIN_COMMANDS + FLAGS).uniq.freeze
     COMPATIBLE_OPTIONS = {
       'clerk' => {
         '-p' => 'Path argument (used as -p YOUR_PATH)',
         '-f' => 'Show full paths',
         '-d' => 'Show dirtiness status (*)',
-        '-v' => 'Verbose'
+        '-v' => 'Verbose (show backtrace in case of an error)'
       },
       'help' => {},
       'version' => {}
@@ -66,30 +68,34 @@ module GitClerk
     end
 
     def detect_flags!
-      uncompatible = uncompatible_options
+      handle_uncompatible_options!
 
-      if uncompatible.any?
-        raise OptionsNotCompatibleError.new(
-          uncompatible: uncompatible,
-          main_command: @main_command
-        )
-      end
+      flag_args = @args.select { |a| FLAGS.include? a }
 
-      flag_args = @args.select { |opt| FLAGS.include? opt }
-      @flags = flag_args.map { |f| PARSED_FLAGS[main_command][f] }.reduce({}, :merge!)
+      @flags = flag_args.map { |f| PARSED_FLAGS.dig(main_command, f) || {} }.reduce({}, :merge!) || {}
     end
 
     def detect_key_value_options!
       # Find key-value options and its values to the right
       id_pairs = args.map { |a| [args.index(a), args.index(a) + 1] if KEY_VALUE_OPTIONS.include? a }.compact.to_h
 
-      handle_unpermitted_values(id_pairs)
+      handle_unpermitted_values!(id_pairs)
       @key_value_options = id_pairs.map { |k, v| [args[k], args[v]] }.to_h
 
       clean_all_key_value_stuff(id_pairs)
     end
 
-    def handle_unpermitted_values(hash)
+    def handle_uncompatible_options!
+      uncompatible = uncompatible_options
+      return if uncompatible.empty?
+
+      raise OptionsNotCompatibleError.new(
+        uncompatible: uncompatible,
+        main_command: @main_command
+      )
+    end
+
+    def handle_unpermitted_values!(hash)
       unpermitted_values = hash.map { |k, v| [args[k], args[v]] if ALLOWED_ARGS.include? args[v] }.compact.to_h
 
       raise OptionInsteadOfArgumentError.new(unpermitted_values) if unpermitted_values.any?
@@ -103,7 +109,7 @@ module GitClerk
     end
 
     def uncompatible_options
-      compatible = COMPATIBLE_OPTIONS[@main_command].keys
+      compatible = COMPATIBLE_OPTIONS[@main_command].keys + GLOBAL_FLAGS
       @args.reject { |g| compatible.include? g }
     end
   end
