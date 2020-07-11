@@ -2,7 +2,9 @@ require 'git_clerk/dir_processor'
 require 'git_clerk/visualizer'
 require 'git_clerk/opt_parser'
 require 'git_clerk/errors/main_command_not_specified_error'
-require 'git_clerk/errors/global_options_not_compatible'
+require 'git_clerk/errors/options_not_compatible_error'
+require 'git_clerk/errors/option_instead_of_argument_error'
+require 'pry'
 
 module GitClerk
   include Gitable
