@@ -20,7 +20,7 @@ module GitClerk
     }.freeze
 
     # If a flag was passed, map to its name and value
-    PARSED_FLAGS = {
+    FLAGS_VALUES = {
       'clerk' => {
         '-f' => { full_paths: true },
         '-d' => { show_dirty: true },
@@ -72,7 +72,7 @@ module GitClerk
 
       flag_args = @args.select { |a| FLAGS.include? a }
 
-      @flags = flag_args.map { |f| PARSED_FLAGS.dig(main_command, f) || {} }.reduce({}, :merge!) || {}
+      @flags = flag_args.map { |f| FLAGS_VALUES.dig(main_command, f) || {} }.reduce({}, :merge!) || {}
     end
 
     def detect_key_value_options!
