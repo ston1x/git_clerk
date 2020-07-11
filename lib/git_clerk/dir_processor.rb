@@ -39,7 +39,6 @@ module GitClerk
           next unless contains_git
 
           entry = {
-            dir: dir,
             path: current_dir_name(full_paths: full_paths),
             branch: branch,
             dirty: dirty?
