@@ -27,6 +27,7 @@ Gem::Specification.new do |spec|
   # Specify development dependencies
   spec.add_development_dependency 'pry', '~> 0.13.1'
   spec.add_development_dependency 'rspec', '~> 3.9.0'
+  spec.add_development_dependency 'rubocop', '0.88.0'
 
   # Specify runtime dependencies
   spec.add_runtime_dependency 'colorize', '~> 0.8.1'
