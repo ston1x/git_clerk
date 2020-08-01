@@ -80,9 +80,10 @@ module GitClerk
       id_pairs = args.map { |a| [args.index(a), args.index(a) + 1] if KEY_VALUE_OPTIONS.include? a }.compact.to_h
 
       handle_unpermitted_values!(id_pairs)
-      @key_value_options = id_pairs.map { |k, v| [args[k], args[v]] }.to_h
-
-      clean_all_key_value_stuff(id_pairs)
+      # Take out the key-value options from @args
+      # After #delete_at(k), the real v value is shifted to the left.
+      # That's why I subtract 1
+      @key_value_options = id_pairs.map { |k, v| [args.delete_at(k), args.delete_at(v - 1)] }.to_h
     end
 
     def handle_uncompatible_options!
@@ -99,13 +100,6 @@ module GitClerk
       unpermitted_values = hash.map { |k, v| [args[k], args[v]] if ALLOWED_ARGS.include? args[v] }.compact.to_h
 
       raise OptionInsteadOfArgumentError.new(unpermitted_values) if unpermitted_values.any?
-    end
-
-    # Clean original @args array from this key-value stuff as it is extracted
-    def clean_all_key_value_stuff(hash)
-      flattened = hash.flatten
-
-      @args.reject! { |a| flattened.include? args.index(a) }
     end
 
     def uncompatible_options
