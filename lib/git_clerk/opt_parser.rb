@@ -75,15 +75,20 @@ module GitClerk
       @flags = flag_args.map { |f| FLAGS_VALUES.dig(main_command, f) || {} }.reduce({}, :merge!) || {}
     end
 
+    # Find key-value options and its values to the right
     def detect_key_value_options!
-      # Find key-value options and its values to the right
-      id_pairs = args.map { |a| [args.index(a), args.index(a) + 1] if KEY_VALUE_OPTIONS.include? a }.compact.to_h
+      id_pairs = group_key_value_pairs_by_ids
 
       handle_unpermitted_values!(id_pairs)
       # Take out the key-value options from @args
       # After #delete_at(k), the real v value is shifted to the left.
-      # That's why I subtract 1
+      # That's why subtract 1
       @key_value_options = id_pairs.map { |k, v| [args.delete_at(k), args.delete_at(v - 1)] }.to_h
+    end
+
+    # Group key-value pairs by IDs (e.g. {0 => 1})
+    def group_key_value_pairs_by_ids
+      args.map { |a| [args.index(a), args.index(a) + 1] if KEY_VALUE_OPTIONS.include? a }.compact.to_h
     end
 
     def handle_uncompatible_options!
@@ -99,7 +104,7 @@ module GitClerk
     def handle_unpermitted_values!(hash)
       unpermitted_values = hash.map { |k, v| [args[k], args[v]] if ALLOWED_ARGS.include? args[v] }.compact.to_h
 
-      raise OptionInsteadOfArgumentError.new(unpermitted_values) if unpermitted_values.any?
+      raise OptionInsteadOfArgumentError, unpermitted_values if unpermitted_values.any?
     end
 
     def uncompatible_options
