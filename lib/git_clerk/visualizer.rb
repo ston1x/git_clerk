@@ -7,19 +7,26 @@ module GitClerk
     end
 
     def pretty_print
-      return puts 'No git directories here!' if data.empty?
+      return puts('No git directories here!') if data.empty?
 
-      pretty_strings = [].tap do |strings|
-        data.each do |entry|
-          strings << "#{path(entry[:path])} | #{colored_branch(entry[:branch])} #{dirtiness_status(entry[:dirty])}"
-        end
-      end
-
-      pretty_strings.each { |str| puts str }
-      nil
+      build_strings
+      print_strings
     end
 
     private
+
+    def build_strings
+      @pretty_strings = []
+
+      @data.each do |entry|
+        @pretty_strings << "#{path(entry[:path])} | #{colored_branch(entry[:branch])}"\
+          "#{dirtiness_status(entry[:dirty])}"
+      end
+    end
+
+    def print_strings
+      @pretty_strings.each { |str| puts str }
+    end
 
     def path(path)
       path.ljust(find_longest_string(:path))

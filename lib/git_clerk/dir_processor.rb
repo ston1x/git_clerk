@@ -38,15 +38,17 @@ module GitClerk
         Dir.chdir(current_dir + '/' + dir) do
           next unless contains_git
 
-          entry = {
-            path: current_dir_name(full_paths: full_paths),
-            branch: branch,
-            dirty: dirty?
-          }
-
-          data << enrich_with_additional_data(entry)
+          data << enrich_with_additional_data(build_entry_hash)
         end
       end
+    end
+
+    def build_entry_hash
+      {
+        path: current_dir_name(full_paths: full_paths),
+        branch: branch,
+        dirty: dirty?
+      }
     end
 
     def regular_folder?(filename)
