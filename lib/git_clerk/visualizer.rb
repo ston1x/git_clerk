@@ -20,7 +20,7 @@ module GitClerk
 
       @data.each do |entry|
         @pretty_strings << "#{path(entry[:path])} | #{colored_branch(entry[:branch])}"\
-          "#{dirtiness_status(entry[:dirty])}"
+          " #{dirtiness_status(entry[:dirty])}"
       end
     end
 
